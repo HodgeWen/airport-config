@@ -1,0 +1,228 @@
+# ClashMetaForAndroid 覆写配置
+# 使用方式：将此文件作为完整配置导入 CMA
+# 将 proxy-providers.subscription.url 替换为你的机场订阅地址
+
+mixed-port: 7890
+allow-lan: true
+mode: rule
+log-level: info
+ipv6: false
+unified-delay: true
+tcp-concurrent: true
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 28.0.0.1/8
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "*.localhost"
+    - dns.msftncsi.com
+    - www.msftncsi.com
+    - www.msftconnecttest.com
+    - stun.*.*
+    - stun.*.*.*
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://doh.pub/dns-query
+    - https://dns.alidns.com/dns-query
+  fallback:
+    - https://dns.cloudflare.com/dns-query
+    - https://dns.google/dns-query
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+
+proxy-providers:
+  subscription:
+    type: http
+    url: "YOUR_SUBSCRIPTION_URL_HERE"
+    interval: 86400
+    path: ./proxy_provider/subscription.yaml
+    health-check:
+      enable: true
+      url: https://www.gstatic.com/generate_204
+      interval: 300
+
+proxy-groups:
+  - name: 节点选择
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Proxy.png
+    type: select
+    proxies:
+      - 延迟优先
+      - AI节点
+      - 香港节点
+      - 日本节点
+      - 新加坡节点
+      - 美国节点
+      - 手动切换
+      - DIRECT
+
+  - name: 延迟优先
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Auto.png
+    type: url-test
+    include-all-providers: true
+    interval: 300
+    tolerance: 50
+
+  - name: AI节点
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Bot.png
+    type: select
+    proxies:
+      - 美国节点
+      - 日本节点
+      - 新加坡节点
+
+  - name: 香港节点
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Hong_Kong.png
+    type: url-test
+    include-all-providers: true
+    filter: "(?i)港|HK|Hong\\s*Kong"
+    interval: 300
+    tolerance: 50
+
+  - name: 日本节点
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Japan.png
+    type: url-test
+    include-all-providers: true
+    filter: "(?i)日本|东京|大阪|泉日|埼玉|JP|Japan"
+    interval: 300
+    tolerance: 50
+
+  - name: 新加坡节点
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Singapore.png
+    type: url-test
+    include-all-providers: true
+    filter: "(?i)新加坡|狮城|SG|Singapore"
+    interval: 300
+    tolerance: 50
+
+  - name: 美国节点
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/United_States.png
+    type: url-test
+    include-all-providers: true
+    filter: "(?i)美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United\\s*States"
+    interval: 300
+    tolerance: 50
+
+  - name: 手动切换
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Static.png
+    type: select
+    include-all-providers: true
+
+  - name: 全球直连
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Direct.png
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+
+  - name: 广告拦截
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Advertising.png
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+
+  - name: 漏网之鱼
+    icon: https://testingcf.jsdelivr.net/gh/Koolson/Qure@master/IconSet/Color/Final.png
+    type: select
+    proxies:
+      - 节点选择
+      - 延迟优先
+      - 香港节点
+      - 日本节点
+      - 新加坡节点
+      - 美国节点
+      - 手动切换
+      - DIRECT
+
+rule-providers:
+  LocalAreaNetwork:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/LocalAreaNetwork.list
+    path: ./ruleset/LocalAreaNetwork.list
+    behavior: classical
+    format: text
+    interval: 86400
+  UnBan:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/UnBan.list
+    path: ./ruleset/UnBan.list
+    behavior: classical
+    format: text
+    interval: 86400
+  BanAD:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanAD.list
+    path: ./ruleset/BanAD.list
+    behavior: classical
+    format: text
+    interval: 86400
+  BanProgramAD:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanProgramAD.list
+    path: ./ruleset/BanProgramAD.list
+    behavior: classical
+    format: text
+    interval: 86400
+  GoogleCN:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/GoogleCN.list
+    path: ./ruleset/GoogleCN.list
+    behavior: classical
+    format: text
+    interval: 86400
+  AI平台-国外:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Ruleset/AI.list
+    path: ./ruleset/AI.list
+    behavior: classical
+    format: text
+    interval: 86400
+  ProxyGFWlist:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ProxyGFWlist.list
+    path: ./ruleset/ProxyGFWlist.list
+    behavior: classical
+    format: text
+    interval: 86400
+  ChinaDomain:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaDomain.list
+    path: ./ruleset/ChinaDomain.list
+    behavior: domain
+    format: text
+    interval: 86400
+  ChinaCompanyIp:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/ChinaCompanyIp.list
+    path: ./ruleset/ChinaCompanyIp.list
+    behavior: ipcidr
+    format: text
+    interval: 86400
+  Download:
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/Download.list
+    path: ./ruleset/Download.list
+    behavior: classical
+    format: text
+    interval: 86400
+
+rules:
+  - RULE-SET,LocalAreaNetwork,全球直连
+  - RULE-SET,UnBan,全球直连
+  - RULE-SET,BanAD,广告拦截
+  - RULE-SET,BanProgramAD,广告拦截
+  - RULE-SET,GoogleCN,全球直连
+  - RULE-SET,AI平台-国外,AI节点
+  - RULE-SET,ProxyGFWlist,节点选择
+  - RULE-SET,ChinaDomain,全球直连
+  - RULE-SET,ChinaCompanyIp,全球直连
+  - RULE-SET,Download,全球直连
+  - GEOIP,CN,全球直连
+  - MATCH,漏网之鱼
